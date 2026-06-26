@@ -1,5 +1,6 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
+const Sale = require("../models/Sale");
 
 //creating an order
 const createOrder = async (req, res) => {
@@ -15,13 +16,13 @@ const createOrder = async (req, res) => {
       customRequirements,
     } = req.body;
 
-    const existingProduct = await Product.findById(product);
-
     if (!product) {
       return res.status(400).json({
         message: "Product ID is required",
       });
     }
+
+    const existingProduct = await Product.findById(product);
 
     if (!existingProduct || !existingProduct.isActive) {
       return res.status(404).json({
@@ -159,6 +160,12 @@ const updateOrderStatus = async (req, res) => {
       });
     }
 
+    if (["Delivered", "Cancelled"].includes(order.status)) {
+      return res.status(400).json({
+        message: `Order is already ${order.status}`,
+      });
+    }
+
     const product = await Product.findById(order.product);
 
     if (!product) {
@@ -167,10 +174,37 @@ const updateOrderStatus = async (req, res) => {
       });
     }
 
+    let validTransitions;
+
+    if (order.orderType === "Inventory Sale") {
+      validTransitions = {
+        Pending: ["Confirmed", "Cancelled"],
+        Confirmed: ["Ready", "Cancelled"],
+        Ready: ["Delivered", "Cancelled"],
+        Delivered: [],
+        Cancelled: [],
+      };
+    } else {
+      validTransitions = {
+        Pending: ["Confirmed", "Cancelled"],
+        Confirmed: ["In Production", "Cancelled"],
+        "In Production": ["Ready"],
+        Ready: ["Delivered"],
+        Delivered: [],
+        Cancelled: [],
+      };
+    }
+
+    if (!validTransitions[order.status].includes(status)) {
+      return res.status(400).json({
+        message: `Cannot move from ${order.status} to ${status}`,
+      });
+    }
+
     /*
-      PENDING -> CONFIRMED
-      Reserve inventory
-    */
+  CONFIRMED/READY -> CANCELLED
+  Return inventory to stock
+*/
     if (
       order.status === "Pending" &&
       status === "Confirmed" &&
@@ -185,7 +219,7 @@ const updateOrderStatus = async (req, res) => {
           $inc: { quantity: -order.quantity },
         },
         {
-          new: true,
+          returnDocument: "after",
         },
       );
 
@@ -196,12 +230,8 @@ const updateOrderStatus = async (req, res) => {
       }
     }
 
-    /*
-      CONFIRMED -> CANCELLED
-      Return inventory
-    */
     if (
-      order.status === "Confirmed" &&
+      ["Confirmed", "Ready"].includes(order.status) &&
       status === "Cancelled" &&
       !product.isMadeToOrder
     ) {
@@ -210,6 +240,40 @@ const updateOrderStatus = async (req, res) => {
           quantity: order.quantity,
         },
       });
+    }
+
+    /*
+  READY -> DELIVERED
+  Create permanent sales record
+*/
+    if (order.status === "Ready" && status === "Delivered") {
+      const existingSale = await Sale.findOne({
+        order: order._id,
+      });
+
+      if (!existingSale) {
+        await Sale.create({
+          order: order._id,
+          product: product._id,
+
+          productName: product.name,
+
+          customerName: order.customerName,
+          customerPhone: order.customerPhone,
+          customerLocation: order.customerLocation,
+
+          quantity: order.quantity,
+
+          listedPrice: order.listedPrice,
+          agreedPrice: order.agreedPrice,
+
+          totalAmount: order.quantity * order.agreedPrice,
+
+          orderType: order.orderType,
+
+          saleDate: new Date(),
+        });
+      }
     }
 
     order.status = status;

@@ -65,7 +65,7 @@ const updateProductById = async (req, res) => {
       }
     }
     const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
-      new: true,
+      returnDocument: "after",
       runValidators: true,
     });
     if (!updatedProduct) {
@@ -110,7 +110,7 @@ const getLowStockProducts = async (req, res) => {
   }
 };
 
-//restock products
+//restock(increase) products
 const increaseStock = async (req, res) => {
   try {
     const { id } = req.params;
@@ -132,14 +132,16 @@ const increaseStock = async (req, res) => {
         $inc: { quantity: addedAmount },
       },
       {
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       },
     );
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
-    } /* 
-    //restock history snapshots
+    }
+
+    /* 
+    Future feature: Restock history snapshots
     await Restock.create({
       productId: product._id,
       productName: product.name,
@@ -182,7 +184,7 @@ const reduceStock = async (req, res) => {
         $inc: { quantity: -requestedAmount },
       },
       {
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       },
     );
