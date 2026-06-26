@@ -1,7 +1,7 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 const Sale = require("../models/Sale");
-
+const normalizeText = require("../utils/normalizeText");
 //creating an order
 const createOrder = async (req, res) => {
   try {
@@ -79,11 +79,21 @@ const createOrder = async (req, res) => {
 //getting all orders
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find()
+    const { status, orderType } = req.query;
+
+    const filter = {};
+
+    if (status) {
+      filter.status = normalizeText(status);
+    }
+
+    if (orderType) {
+      filter.orderType = normalizeText(orderType);
+    }
+
+    const orders = await Order.find(filter)
       .populate("product", "name listedPrice")
-      .sort({
-        createdAt: -1,
-      });
+      .sort({ createdAt: -1 });
 
     res.status(200).json(orders);
   } catch (err) {
@@ -141,10 +151,7 @@ const updateOrderStatus = async (req, res) => {
       return res.status(400).json({ message: "Status is required" });
     }
 
-    status = status
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(" ");
+    status = normalizeText(status);
 
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({
