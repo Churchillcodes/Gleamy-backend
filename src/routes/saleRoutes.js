@@ -9,16 +9,40 @@ const {
   getSalesBreakdown,
   getCustomerHistory,
 } = require("../controllers/saleController");
+const verifyJWT = require("../middleware/verifyJWT");
+const verifyRoles = require("../middleware/verifyRoles");
+const ROLES_LIST = require("../config/roles_list");
 
-router.get("/analytics/top-products", getTopProducts);
+router.get(
+  "/analytics/top-products",
+  verifyJWT,
+  verifyRoles(ROLES_LIST.Admin),
+  getTopProducts,
+);
 
-router.get("/analytics/revenue-trends", getRevenueTrends);
+router.get(
+  "/analytics/revenue-trends",
+  verifyJWT,
+  verifyRoles(ROLES_LIST.Admin),
+  getRevenueTrends,
+);
 
-router.get("/analytics/sales-breakdown", getSalesBreakdown);
+router.get(
+  "/analytics/sales-breakdown",
+  verifyJWT,
+  verifyRoles(ROLES_LIST.Admin),
+  getSalesBreakdown,
+);
 
-router.get("/analytics/customer-history", getCustomerHistory);
+router.get(
+  "/analytics/customer-history",
+  verifyJWT,
+  verifyRoles(ROLES_LIST.Admin),
+  getCustomerHistory,
+);
 
-router.get("/", getAllSales);
-router.get("/:id", getSaleById);
+router.get("/", verifyJWT, verifyRoles(ROLES_LIST.Admin), getAllSales);
+
+router.get("/:id", verifyJWT, verifyRoles(ROLES_LIST.Admin), getSaleById);
 
 module.exports = router;

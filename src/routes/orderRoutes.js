@@ -8,13 +8,28 @@ const {
   updateOrderStatus,
   cancelOrder,
 } = require("../controllers/orderController");
+const verifyJWT = require("../middleware/verifyJWT");
+const verifyRoles = require("../middleware/verifyRoles");
+const ROLES_LIST = require("../config/roles_list");
 
-router.get("/", getAllOrders);
-router.get("/:id", getOrderById);
+router.get("/", verifyJWT, verifyRoles(ROLES_LIST.Admin), getAllOrders);
 
-router.post("/", createOrder);
+router.get("/:id", verifyJWT, verifyRoles(ROLES_LIST.Admin), getOrderById);
 
-router.patch("/:id/status", updateOrderStatus);
-router.patch("/:id/cancel", cancelOrder);
+router.post("/", verifyJWT, verifyRoles(ROLES_LIST.Admin), createOrder);
+
+router.patch(
+  "/:id/status",
+  verifyJWT,
+  verifyRoles(ROLES_LIST.Admin),
+  updateOrderStatus,
+);
+
+router.patch(
+  "/:id/cancel",
+  verifyJWT,
+  verifyRoles(ROLES_LIST.Admin),
+  cancelOrder,
+);
 
 module.exports = router;

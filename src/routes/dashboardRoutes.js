@@ -5,8 +5,22 @@ const {
   getDashboardSummary,
   getRevenueAnalytics,
 } = require("../controllers/dashboardController");
+const verifyJWT = require("../middleware/verifyJWT");
+const verifyRoles = require("../middleware/verifyRoles");
+const ROLES_LIST = require("../config/roles_list");
 
-router.get("/summary", getDashboardSummary);
-router.get("/revenue", getRevenueAnalytics);
+router.get(
+  "/summary",
+  verifyJWT,
+  verifyRoles(ROLES_LIST.Admin),
+  getDashboardSummary,
+);
+
+router.get(
+  "/revenue",
+  verifyJWT,
+  verifyRoles(ROLES_LIST.Admin),
+  getRevenueAnalytics,
+);
 
 module.exports = router;
