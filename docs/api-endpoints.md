@@ -1,4 +1,4 @@
-# Glimmy Backend API
+# gleamy Backend API
 
 ## Authentication
 

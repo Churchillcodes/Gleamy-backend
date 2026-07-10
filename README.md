@@ -1,14 +1,14 @@
-# Glimmy Baby Cots & Furniture Backend
+# gleamy Baby Cots & Furniture Backend
 
-Backend API for the Glimmy Baby Cots & Furniture Management System.
+Backend API for the gleamy Baby Cots & Furniture Management System.
 
-This project powers the business operations of Glimmy Baby Cots & Furniture by providing secure APIs for product management, order management, inventory tracking, sales analytics, authentication, and image management.
+This project powers the business operations of gleamy Baby Cots & Furniture by providing secure APIs for product management, order management, inventory tracking, sales analytics, authentication, and image management.
 
 ---
 
 ## Project Overview
 
-Glimmy Baby Cots & Furniture is a furniture manufacturing and retail business specializing in baby furniture, storage furniture, and selected home furniture products.
+gleamy Baby Cots & Furniture is a furniture manufacturing and retail business specializing in baby furniture, storage furniture, and selected home furniture products.
 
 This backend system was developed to replace manual business processes and provide a scalable foundation for:
 
@@ -156,13 +156,13 @@ seed/
 Clone the repository:
 
 ```bash
-git clone https://github.com/Churchillcodes/Glimmy-backend.git
+git clone https://github.com/Churchillcodes/gleamy-backend.git
 ```
 
 Navigate into the project:
 
 ```bash
-cd glimmy-backend
+cd gleamy-backend
 ```
 
 Install dependencies:
@@ -313,4 +313,4 @@ https://github.com/Churchillcodes
 
 ## License
 
-This project is currently proprietary and was developed for Glimmy Baby Cots & Furniture.
+This project is currently proprietary and was developed for gleamy Baby Cots & Furniture.
