@@ -209,8 +209,8 @@ const updateOrderStatus = async (req, res) => {
     }
 
     /*
-  CONFIRMED/READY -> CANCELLED
-  Return inventory to stock
+  Confirmed/Ready -> Cancelled
+  Return reserved inventory to stock
 */
     if (
       order.status === "Pending" &&
@@ -307,7 +307,10 @@ const updateOrderStatus = async (req, res) => {
 //cancelling an order
 const cancelOrder = async (req, res) => {
   try {
-    req.body.status = "Cancelled";
+    req.body = {
+      ...(req.body || {}),
+      status: "Cancelled",
+    };
 
     return updateOrderStatus(req, res);
   } catch (err) {

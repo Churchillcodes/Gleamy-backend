@@ -100,11 +100,6 @@ const getLowStockProducts = async (req, res) => {
       isActive: true,
       isMadeToOrder: false,
     });
-    if (products.length === 0) {
-      return res
-        .status(200)
-        .json({ message: `Stock quantity is healthy above ${threshold}` });
-    }
     res.status(200).json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -241,17 +236,17 @@ const deleteProductById = async (req, res) => {
 //retrieve all archived products
 const getArchivedProducts = async (req, res) => {
   try {
-    const products = await Product.find({ isActive: false }).sort({
+    const products = await Product.find({
+      isActive: false,
+    }).sort({
       updatedAt: -1,
     });
-    if (products.length === 0) {
-      return res
-        .status(200)
-        .json({ message: "No archived products currently" });
-    }
+
     res.status(200).json(products);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({
+      message: err.message,
+    });
   }
 };
 

@@ -63,11 +63,9 @@ const handleNewLogin = async (req, res) => {
 
     // 3. Enforce isActive account validation
     if (!foundUser.isActive) {
-      return res
-        .status(403)
-        .json({
-          message: "Account has been deactivated. Please contact support.",
-        });
+      return res.status(403).json({
+        message: "Account has been deactivated. Please contact support.",
+      });
     }
 
     // Match the passwords
@@ -105,7 +103,7 @@ const handleNewLogin = async (req, res) => {
     // Send refreshToken cookie
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: /* process.env.NODE_ENV === "production" */ true,
       sameSite: "None",
       maxAge: 24 * 60 * 60 * 1000,
     });
@@ -177,7 +175,7 @@ const handleLogout = async (req, res) => {
       res.clearCookie("jwt", {
         httpOnly: true,
         sameSite: "None",
-        secure: process.env.NODE_ENV === "production",
+        secure: /* process.env.NODE_ENV === "production" */ true,
       });
       return res.sendStatus(204);
     }
@@ -190,7 +188,7 @@ const handleLogout = async (req, res) => {
     res.clearCookie("jwt", {
       httpOnly: true,
       sameSite: "None",
-      secure: process.env.NODE_ENV === "production",
+      secure: /* process.env.NODE_ENV === "production" */ true,
     });
     res.status(200).json({ message: "Logged out successfully" });
   } catch (err) {
