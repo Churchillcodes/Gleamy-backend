@@ -8,7 +8,7 @@ This project powers the business operations of gleamy Baby Cots & Furniture by p
 
 ## Project Overview
 
-gleamy Baby Cots & Furniture is a furniture manufacturing and retail business specializing in baby furniture, storage furniture, and selected home furniture products.
+Gleamy Baby Cots & Furniture is a furniture manufacturing and retail business specializing in baby furniture, storage furniture, and selected home furniture products.
 
 This backend system was developed to replace manual business processes and provide a scalable foundation for:
 
