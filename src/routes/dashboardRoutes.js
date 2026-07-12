@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   getDashboardSummary,
   getRevenueAnalytics,
+  getLeadAnalytics,
 } = require("../controllers/dashboardController");
 const verifyJWT = require("../middleware/verifyJWT");
 const verifyRoles = require("../middleware/verifyRoles");
@@ -21,6 +22,13 @@ router.get(
   verifyJWT,
   verifyRoles(ROLES_LIST.Admin),
   getRevenueAnalytics,
+);
+
+router.get(
+  "/leads",
+  verifyJWT,
+  verifyRoles(ROLES_LIST.Admin),
+  getLeadAnalytics,
 );
 
 module.exports = router;

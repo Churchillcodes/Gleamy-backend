@@ -1,5 +1,6 @@
 const Product = require("../models/Product");
 const Order = require("../models/Order");
+const Lead = require("../models/Lead");
 
 //Dashboard summary
 const getDashboardSummary = async (req, res) => {
@@ -8,15 +9,24 @@ const getDashboardSummary = async (req, res) => {
       totalProducts,
       activeProducts,
       archivedProducts,
+      lowStockProducts,
       totalOrders,
       pendingOrders,
       confirmedOrders,
       deliveredOrders,
       cancelledOrders,
+      totalLeads,
+      newLeads,
     ] = await Promise.all([
       Product.countDocuments(),
       Product.countDocuments({ isActive: true }),
       Product.countDocuments({ isActive: false }),
+
+      Product.countDocuments({
+        quantity: { $lte: 5 },
+        isActive: true,
+        isMadeToOrder: false,
+      }),
 
       Order.countDocuments(),
 
@@ -33,6 +43,7 @@ const getDashboardSummary = async (req, res) => {
       totalProducts,
       activeProducts,
       archivedProducts,
+      lowStockProducts,
 
       totalOrders,
       pendingOrders,
@@ -85,7 +96,43 @@ const getRevenueAnalytics = async (req, res) => {
     });
   }
 };
+
+// Lead Analytics
+const getLeadAnalytics = async (req, res) => {
+  try {
+    const leads = await Lead.find();
+
+    const totalLeads = leads.length;
+
+    const sourceCounts = {};
+
+    leads.forEach((lead) => {
+      sourceCounts[lead.source] = (sourceCounts[lead.source] || 0) + 1;
+    });
+
+    const leadSources = Object.entries(sourceCounts)
+      .map(([source, count]) => ({
+        source,
+        count,
+      }))
+      .sort((a, b) => b.count - a.count);
+
+    const topSource =
+      leadSources.length > 0 ? leadSources[0].source : "No leads yet";
+
+    res.status(200).json({
+      totalLeads,
+      topSource,
+      leadSources,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
 module.exports = {
   getDashboardSummary,
   getRevenueAnalytics,
+  getLeadAnalytics,
 };
