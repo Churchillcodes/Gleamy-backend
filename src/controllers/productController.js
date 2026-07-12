@@ -112,13 +112,11 @@ const increaseStock = async (req, res) => {
     const { id } = req.params;
     const addedAmount = Number(req.body.quantity);
 
-    //validate product quantity isn't 0 or less
     if (isNaN(addedAmount) || addedAmount <= 0) {
       return res
         .status(400)
         .json({ message: "Restock amount must be greater than 0" });
     }
-    //find and increment(make it atomic)
     const product = await Product.findOneAndUpdate(
       {
         _id: id,
@@ -135,16 +133,6 @@ const increaseStock = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-
-    /* 
-    Future feature: Restock history snapshots
-    await Restock.create({
-      productId: product._id,
-      productName: product.name,
-      stockBeforeRestock: product.quantity - addedAmount,
-      stockAfterRestock: product.quantity,
-      quantityAdded: addedAmount,
-    }); */
 
     res
       .status(200)
@@ -163,13 +151,11 @@ const reduceStock = async (req, res) => {
     const { id } = req.params;
     const requestedAmount = Number(req.body.quantity);
 
-    //validate product quantity isn't 0 or less
     if (isNaN(requestedAmount) || requestedAmount <= 0) {
       return res
         .status(400)
         .json({ message: "Stock amount must be greater than 0" });
     }
-    //find and decrease(make it atomic)
     const product = await Product.findOneAndUpdate(
       {
         _id: id,
@@ -310,9 +296,12 @@ const uploadProductImages = async (req, res) => {
 
     await product.save();
 
+    // Return the FULL product (not just the images array) so the frontend
+    // always has product._id available for any follow-up action (like an
+    // immediate image delete) in the same edit session.
     res.status(200).json({
       message: "Images uploaded successfully",
-      images: product.images,
+      product,
     });
   } catch (err) {
     res.status(500).json({
@@ -357,9 +346,11 @@ const deleteProductImage = async (req, res) => {
 
     await product.save();
 
+    // Same fix as upload: return the full product, consistent key name
+    // ("product") matching every other mutation endpoint in this file.
     res.status(200).json({
       message: "Image deleted successfully",
-      remainingImages: product.images,
+      product,
     });
   } catch (err) {
     if (err.name === "CastError") {
