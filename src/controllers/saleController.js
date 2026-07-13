@@ -124,42 +124,55 @@ const getRevenueTrends = async (req, res) => {
   }
 };
 
-//getting sales breakdown
+//getting sales breakdown BY PRODUCT CATEGORY (Baby Furniture / Storage
+//Furniture / Living Room Furniture) — this answers "which furniture line
+//drives our revenue", which is what the admin UI's "Category Demand Split"
+//section is meant to show. Sale documents don't store category directly
+//(only a productName snapshot), so we $lookup into the Products collection
+//via the `product` ref to pull it in.
 const getSalesBreakdown = async (req, res) => {
   try {
     const breakdown = await Sale.aggregate([
       {
-        $group: {
-          _id: "$orderType",
-
-          salesCount: {
-            $sum: 1,
-          },
-
-          revenue: {
-            $sum: "$totalAmount",
-          },
+        $lookup: {
+          from: "products", // Mongoose pluralizes "Product" model -> "products" collection
+          localField: "product",
+          foreignField: "_id",
+          as: "productInfo",
         },
+      },
+      {
+        // A sale's linked product should always exist (products are only ever
+        // archived, never hard-deleted), but preserveNullAndEmptyArrays keeps
+        // this endpoint from silently dropping a sale if that ever changes.
+        $unwind: {
+          path: "$productInfo",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: { $ifNull: ["$productInfo.category", "Uncategorized"] },
+          count: { $sum: 1 },
+          revenue: { $sum: "$totalAmount" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          category: "$_id",
+          count: 1,
+          revenue: 1,
+        },
+      },
+      {
+        $sort: { revenue: -1 },
       },
     ]);
 
-    const inventorySales =
-      breakdown.find((item) => item._id === "Inventory Sale") || {};
-
-    const customOrders =
-      breakdown.find((item) => item._id === "Custom Order") || {};
-
-    res.status(200).json({
-      inventorySales: {
-        count: inventorySales.salesCount || 0,
-        revenue: inventorySales.revenue || 0,
-      },
-
-      customOrders: {
-        count: customOrders.salesCount || 0,
-        revenue: customOrders.revenue || 0,
-      },
-    });
+    // Returns an ARRAY of { category, count, revenue } — matches what the
+    // frontend's AnalyticsPage.jsx already expects, no frontend change needed.
+    res.status(200).json(breakdown);
   } catch (err) {
     res.status(500).json({
       message: err.message,
