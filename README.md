@@ -1,23 +1,30 @@
-# gleamy Baby Cots & Furniture Backend
+# Gleamy Baby Cots & Furniture Backend
 
-Backend API for the gleamy Baby Cots & Furniture Management System.
+Backend API for the Gleamy Baby Cots & Furniture Management System.
 
-This project powers the business operations of gleamy Baby Cots & Furniture by providing secure APIs for product management, order management, inventory tracking, sales analytics, authentication, and image management.
+This backend powers the business operations behind the Gleamy platform by providing secure APIs for authentication, product management, inventory tracking, sales analytics, image management, and administrator operations.
 
 ---
 
-## Project Overview
+## Overview
 
-Gleamy Baby Cots & Furniture is a furniture manufacturing and retail business specializing in baby furniture, storage furniture, and selected home furniture products.
+Gleamy Baby Cots & Furniture is a furniture manufacturing and retail business specializing in custom furniture and baby furniture products.
 
-This backend system was developed to replace manual business processes and provide a scalable foundation for:
+This system was developed to digitize business operations that were previously managed manually and provide a scalable foundation for future growth.
 
-- Product management
-- Order tracking
-- Inventory management
-- Customer sales tracking
-- Business analytics
-- Secure administrator access
+---
+
+## Core Business Objectives
+
+The platform enables the business to:
+
+* Manage product catalogues
+* Track inventory levels
+* Monitor sales performance
+* Upload and manage product images
+* Generate business insights
+* Secure administrative access
+* Maintain accurate stock records
 
 ---
 
@@ -25,64 +32,80 @@ This backend system was developed to replace manual business processes and provi
 
 ### Authentication & Authorization
 
-- JWT Authentication
-- Access Token & Refresh Token implementation
-- Secure password hashing using bcrypt
-- Role-Based Authorization
-- Protected administrator routes
+* User Registration
+* User Login
+* JWT Access Tokens
+* JWT Refresh Tokens
+* Secure Cookie Authentication
+* Password Hashing with bcrypt
+* Role-Based Authorization
+* Protected Admin Routes
+
+---
 
 ### Product Management
 
-- Create products
-- Retrieve products
-- Update products
-- Archive products (soft delete)
-- Restore archived products
-- Low stock monitoring
-- Stock increase and reduction
+* Create Products
+* Retrieve Products
+* Update Products
+* Archive Products
+* Restore Archived Products
+* Product Search
+* Product Filtering
+* Low Stock Monitoring
 
-### Cloudinary Image Management
-
-- Upload product images
-- Store Cloudinary URLs and Public IDs
-- Delete product images
-- Prevent deletion of the final product image
-
-### Order Management
-
-- Create customer orders
-- Track order status
-- Update order status
-- Cancel orders
-- Inventory restoration on cancellation
+---
 
 ### Inventory Management
 
-- Stock tracking
-- Low stock detection
-- Atomic stock updates
-- Inventory-safe order workflows
+* Stock Tracking
+* Inventory Adjustments
+* Stock Validation
+* Low Stock Alerts
+* Inventory-Safe Operations
+
+---
+
+### Image Management
+
+Cloudinary Integration:
+
+* Upload Product Images
+* Delete Product Images
+* Store Cloudinary URLs
+* Store Public IDs
+* Prevent Deletion of Final Product Image
+
+---
 
 ### Sales Management
 
-- Automatic sales record creation
-- Revenue tracking
-- Customer purchase history
-- Product sales analysis
+* Revenue Tracking
+* Sales Records
+* Product Sales History
+* Sales Aggregation
+* Business Performance Tracking
+
+---
 
 ### Analytics
 
-- Revenue analytics
-- Top-selling products
-- Sales breakdown reports
-- Customer history reports
-- Dashboard summaries
+Dashboard analytics include:
+
+* Revenue Summaries
+* Product Performance Metrics
+* Sales Insights
+* Inventory Statistics
+* Business Dashboard Reporting
+
+---
 
 ### Development Utilities
 
-- Database seed scripts
-- Sample data generation
-- API documentation
+* Database Seeding
+* Sample Data Generation
+* API Documentation
+* Development Scripts
 
 ---
 
@@ -90,31 +113,31 @@ This backend system was developed to replace manual business processes and provi
 
 ### Backend
 
-- Node.js
-- Express.js
+* Node.js
+* Express.js
 
 ### Database
 
-- MongoDB Atlas
-- Mongoose ODM
+* MongoDB Atlas
+* Mongoose
 
 ### Authentication
 
-- JSON Web Tokens (JWT)
-- bcrypt
+* JWT
+* bcrypt
 
-### File Storage
+### Cloud Storage
 
-- Cloudinary
-- Multer
-- Multer Storage Cloudinary
+* Cloudinary
+* Multer
+* Multer Storage Cloudinary
 
 ### Development Tools
 
-- Nodemon
-- Git
-- GitHub
-- Postman
+* Nodemon
+* Git
+* GitHub
+* Postman
 
 ---
 
@@ -124,19 +147,13 @@ This backend system was developed to replace manual business processes and provi
 src/
 │
 ├── config/
-│
 ├── controllers/
-│
 ├── middleware/
-│
 ├── models/
-│
 ├── routes/
-│
 ├── utils/
 │
 ├── app.js
-│
 └── server.js
 
 docs/
@@ -150,6 +167,8 @@ seed/
 ├── sample-sales.json
 └── seeder.js
 ```
+
+---
 
 ## Installation
 
@@ -175,9 +194,9 @@ npm install
 
 ## Environment Variables
 
-Create a `.env` file in the project root and add:
+Create a `.env` file in the project root:
 
-````env
+```env
 DATABASE_URI=
 
 ACCESS_TOKEN_SECRET=
@@ -189,6 +208,7 @@ CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 
 CLOUDINARY_API_SECRET=
+```
 
 ---
 
@@ -198,7 +218,7 @@ Development Mode:
 
 ```bash
 npm run dev
-````
+```
 
 Production Mode:
 
@@ -210,26 +230,26 @@ npm start
 
 ## API Documentation
 
-Detailed API endpoint documentation can be found in:
+Detailed API documentation can be found in:
 
 ```text
 docs/api-endpoints.md
 ```
 
-The documentation includes:
+Includes:
 
-- Authentication endpoints
-- Product endpoints
-- Order endpoints
-- Sales endpoints
-- Dashboard endpoints
-- Analytics endpoints
+* Authentication Routes
+* Product Routes
+* Sales Routes
+* Analytics Routes
+* Dashboard Routes
+* Upload Routes
 
 ---
 
 ## Database Seeding
 
-Development only.
+Development environments only.
 
 Run:
 
@@ -239,48 +259,62 @@ npm run seed
 
 ### Warning
 
-The seeding script will delete all:
+The seeding process removes existing:
 
-- Products
-- Orders
-- Sales
+* Products
+* Sales Records
 
-before recreating them from the sample data files.
+before generating sample development data.
 
-The script is protected from running in production environments.
+Never run against production databases.
 
 ---
 
 ## Security Features
 
-- Password hashing using bcrypt
-- JWT Access Tokens
-- JWT Refresh Tokens
-- Protected routes
-- Role-based access control
-- Secure cookie handling
-- Input validation
-- MongoDB schema validation
+* Password Hashing
+* JWT Authentication
+* Refresh Token Rotation
+* Secure Cookie Handling
+* Role-Based Access Control
+* Protected Routes
+* Input Validation
+* MongoDB Schema Validation
+
+---
+
+## Production Architecture
+
+```text
+Frontend (Netlify)
+        │
+        ▼
+Backend API (Railway)
+        │
+        ▼
+MongoDB Atlas
+        │
+        ▼
+Cloudinary
+```
 
 ---
 
 ## Current Roles
 
+### User
+
+Standard authenticated user.
+
 ### Admin
 
-Administrators have access to:
+Administrators can:
 
-- Products
-- Orders
-- Sales
-- Analytics
-- Dashboard
-
-### Future Roles (Planned)
-
-- Staff Accounts
-- Inventory Personnel
-- Sales Personnel
+* Manage Products
+* Upload Images
+* Monitor Analytics
+* Access Dashboard Features
+* Manage Inventory
 
 ---
 
@@ -288,15 +322,15 @@ Administrators have access to:
 
 Planned Version 2 Features:
 
-- Customer Accounts
-- MPesa Integration
-- Online Checkout
-- Shopping Cart
-- Employee Accounts
-- Manufacturing Tracking
-- Raw Material Tracking
-- Role-Based Permissions Expansion
-- Customer Reviews
+* MPesa Integration
+* Shopping Cart
+* Online Checkout
+* Customer Accounts
+* Employee Accounts
+* Manufacturing Tracking
+* Raw Material Tracking
+* Advanced Reporting
+* Expanded Role System
 
 ---
 
@@ -304,13 +338,14 @@ Planned Version 2 Features:
 
 **Churchill**
 
-Full Stack Web Development Student
+Full Stack Developer
 
 GitHub:
+
 https://github.com/Churchillcodes
 
 ---
 
 ## License
 
-This project is currently proprietary and was developed for gleamy Baby Cots & Furniture.
+This project is proprietary software developed for Gleamy Baby Cots & Furniture.
