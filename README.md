@@ -1,143 +1,138 @@
-# Gleamy Baby Cots & Furniture Backend
+<div align="center">
 
-Backend API for the Gleamy Baby Cots & Furniture Management System.
+# Gleamy Baby Cots & Furniture — Backend API
 
-This backend powers the business operations behind the Gleamy platform by providing secure APIs for authentication, product management, inventory tracking, sales analytics, image management, and administrator operations.
+**The engine behind a real furniture manufacturing business** — authentication, product & inventory management, lead & sales analytics, and secure admin operations.
+
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB_Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-Auth-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
+![License](https://img.shields.io/badge/License-Proprietary-lightgrey?style=for-the-badge)
+
+</div>
 
 ---
 
-## Overview
+## Table of Contents
 
-Gleamy Baby Cots & Furniture is a furniture manufacturing and retail business specializing in custom furniture and baby furniture products.
-
-This system was developed to digitize business operations that were previously managed manually and provide a scalable foundation for future growth.
+- [About the Project](#about-the-project)
+- [What This API Powers](#what-this-api-powers)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [API Documentation](#api-documentation)
+- [Database Seeding](#database-seeding)
+- [Production Architecture](#production-architecture)
+- [Security](#security)
+- [Roles](#roles)
+- [Roadmap](#roadmap)
+- [Author](#author)
 
 ---
 
-## Core Business Objectives
+## About the Project
 
-The platform enables the business to:
+Gleamy Baby Cots & Furniture is a Nairobi-based furniture manufacturer that previously ran its entire catalogue, inventory, and sales process manually over WhatsApp. This API digitizes that operation — providing secure endpoints for authentication, product and inventory management, image handling, lead tracking, and sales analytics that power both the public storefront and the admin dashboard.
 
-* Manage product catalogues
-* Track inventory levels
-* Monitor sales performance
-* Upload and manage product images
-* Generate business insights
-* Secure administrative access
-* Maintain accurate stock records
+---
+
+## What This API Powers
+
+The screens below are rendered by the companion [frontend](https://github.com/Churchillcodes/gleamy-frontend), but every number, record, and permission check on them is served by this API.
+
+<div align="center">
+<img src="./screenshots/01-dashboard-overview.jpg" width="850" alt="Dashboard overview" /><br/>
+<sub><b>Dashboard metrics</b> — revenue, monthly sales volume, inventory counts, and lead analytics computed server-side</sub>
+</div>
+
+<br/>
+
+<table>
+<tr>
+<td width="50%">
+<img src="./screenshots/02-lead-capture.jpg" width="100%" alt="Lead capture" /><br/>
+<sub><b>Lead capture</b> — customer name, phone, and referral source recorded before the WhatsApp handoff</sub>
+</td>
+<td width="50%">
+<img src="./screenshots/03-analytics-top-selling.jpg" width="100%" alt="Sales analytics" /><br/>
+<sub><b>Sales analytics</b> — top products ranked by aggregated units sold and revenue</sub>
+</td>
+</tr>
+</table>
+
+<div align="center">
+<img src="./screenshots/04-sales-audit-logs.jpg" width="850" alt="Sales audit logs" /><br/>
+<sub><b>Immutable sales logs</b> — auto-generated snapshots when an order is marked delivered</sub>
+</div>
+
+<br/>
+
+<div align="center">
+<img src="./screenshots/05-admin-login.jpg" width="600" alt="Admin authentication" /><br/>
+<sub><b>JWT-secured admin access</b> — every request beyond this gate is authenticated & role-checked</sub>
+</div>
 
 ---
 
 ## Features
 
-### Authentication & Authorization
+### 🔐 Authentication & Authorization
+- User registration and login
+- JWT access tokens with refresh token rotation
+- Secure, HTTP-only cookie handling
+- Password hashing with bcrypt
+- Role-based authorization on protected admin routes
 
-* User Registration
-* User Login
-* JWT Access Tokens
-* JWT Refresh Tokens
-* Secure Cookie Authentication
-* Password Hashing with bcrypt
-* Role-Based Authorization
-* Protected Admin Routes
+### 📦 Product Management
+- Full CRUD on products
+- Archive and restore products (soft-delete safe)
+- Search and category filtering
+- Low-stock monitoring
 
----
+### 📊 Inventory Management
+- Real-time stock tracking and adjustments
+- Stock validation to prevent overselling
+- Low-stock alerts
+- Inventory-safe atomic operations
 
-### Product Management
+### 🖼️ Image Management
+- Cloudinary integration for product photos
+- Upload and delete product images
+- Stores Cloudinary URLs and public IDs
+- Guards against deleting a product's final image
 
-* Create Products
-* Retrieve Products
-* Update Products
-* Archive Products
-* Restore Archived Products
-* Product Search
-* Product Filtering
-* Low Stock Monitoring
+### 📥 Lead Tracking & Analytics
+- Records each customer's name, phone number, and referral source at the point of inquiry
+- Aggregates leads by source (Instagram, Facebook, Google Search, etc.)
+- Powers the dashboard's Lead Analytics widget for marketing insight
 
----
+### 💰 Sales Management & Analytics
+- Revenue tracking and sales record-keeping
+- Product-level sales history
+- Aggregated analytics for dashboard reporting
+- Business performance indicators
 
-### Inventory Management
-
-* Stock Tracking
-* Inventory Adjustments
-* Stock Validation
-* Low Stock Alerts
-* Inventory-Safe Operations
-
----
-
-### Image Management
-
-Cloudinary Integration:
-
-* Upload Product Images
-* Delete Product Images
-* Store Cloudinary URLs
-* Store Public IDs
-* Prevent Deletion of Final Product Image
+### 🛠️ Development Utilities
+- Database seeding with realistic sample data
+- API documentation
+- Developer-friendly scripts
 
 ---
 
-### Sales Management
+## Tech Stack
 
-* Revenue Tracking
-* Sales Records
-* Product Sales History
-* Sales Aggregation
-* Business Performance Tracking
-
----
-
-### Analytics
-
-Dashboard analytics include:
-
-* Revenue Summaries
-* Product Performance Metrics
-* Sales Insights
-* Inventory Statistics
-* Business Dashboard Reporting
-
----
-
-### Development Utilities
-
-* Database Seeding
-* Sample Data Generation
-* API Documentation
-* Development Scripts
-
----
-
-## Technology Stack
-
-### Backend
-
-* Node.js
-* Express.js
-
-### Database
-
-* MongoDB Atlas
-* Mongoose
-
-### Authentication
-
-* JWT
-* bcrypt
-
-### Cloud Storage
-
-* Cloudinary
-* Multer
-* Multer Storage Cloudinary
-
-### Development Tools
-
-* Nodemon
-* Git
-* GitHub
-* Postman
+| Layer | Technology |
+|---|---|
+| Runtime | Node.js |
+| Framework | Express.js |
+| Database | MongoDB Atlas, Mongoose |
+| Auth | JWT, bcrypt |
+| Media Storage | Cloudinary, Multer, Multer Storage Cloudinary |
+| Tooling | Nodemon, Git, GitHub, Postman |
 
 ---
 
@@ -146,22 +141,20 @@ Dashboard analytics include:
 ```text
 src/
 │
-├── config/
-├── controllers/
-├── middleware/
-├── models/
-├── routes/
-├── utils/
+├── config/       # Environment & service configuration
+├── controllers/  # Route handler logic
+├── middleware/   # Auth, validation, error handling
+├── models/       # Mongoose schemas
+├── routes/       # Express route definitions
+├── utils/        # Helper utilities
 │
 ├── app.js
 └── server.js
 
 docs/
-│
-└── api-endpoints.md
+└── api-endpoints.md   # Full API reference
 
 seed/
-│
 ├── sample-products.json
 ├── sample-orders.json
 ├── sample-sales.json
@@ -170,17 +163,12 @@ seed/
 
 ---
 
-## Installation
+## Getting Started
 
 Clone the repository:
 
 ```bash
 git clone https://github.com/Churchillcodes/gleamy-backend.git
-```
-
-Navigate into the project:
-
-```bash
 cd gleamy-backend
 ```
 
@@ -188,6 +176,18 @@ Install dependencies:
 
 ```bash
 npm install
+```
+
+Run in development mode:
+
+```bash
+npm run dev
+```
+
+Run in production mode:
+
+```bash
+npm start
 ```
 
 ---
@@ -198,154 +198,92 @@ Create a `.env` file in the project root:
 
 ```env
 DATABASE_URI=
-
 ACCESS_TOKEN_SECRET=
-
 REFRESH_TOKEN_SECRET=
-
 CLOUDINARY_CLOUD_NAME=
-
 CLOUDINARY_API_KEY=
-
 CLOUDINARY_API_SECRET=
-```
-
----
-
-## Running the Project
-
-Development Mode:
-
-```bash
-npm run dev
-```
-
-Production Mode:
-
-```bash
-npm start
 ```
 
 ---
 
 ## API Documentation
 
-Detailed API documentation can be found in:
+Full endpoint documentation is available in [`docs/api-endpoints.md`](./docs/api-endpoints.md), covering:
 
-```text
-docs/api-endpoints.md
-```
-
-Includes:
-
-* Authentication Routes
-* Product Routes
-* Sales Routes
-* Analytics Routes
-* Dashboard Routes
-* Upload Routes
+- Authentication routes
+- Product routes
+- Sales routes
+- Analytics routes
+- Dashboard routes
+- Upload routes
 
 ---
 
 ## Database Seeding
 
-Development environments only.
-
-Run:
+> ⚠️ **Development environments only.**
 
 ```bash
 npm run seed
 ```
 
-### Warning
-
-The seeding process removes existing:
-
-* Products
-* Sales Records
-
-before generating sample development data.
-
-Never run against production databases.
-
----
-
-## Security Features
-
-* Password Hashing
-* JWT Authentication
-* Refresh Token Rotation
-* Secure Cookie Handling
-* Role-Based Access Control
-* Protected Routes
-* Input Validation
-* MongoDB Schema Validation
+This removes existing **products** and **sales records** before generating fresh sample data. **Never run against a production database.**
 
 ---
 
 ## Production Architecture
 
-```text
-Frontend (Netlify)
-        │
-        ▼
-Backend API (Railway)
-        │
-        ▼
-MongoDB Atlas
-        │
-        ▼
-Cloudinary
+```mermaid
+flowchart TD
+    A[Frontend · Netlify] --> B[Backend API · Railway]
+    B --> C[(MongoDB Atlas)]
+    B --> D[Cloudinary]
 ```
 
 ---
 
-## Current Roles
+## Security
 
-### User
-
-Standard authenticated user.
-
-### Admin
-
-Administrators can:
-
-* Manage Products
-* Upload Images
-* Monitor Analytics
-* Access Dashboard Features
-* Manage Inventory
+- Password hashing with bcrypt
+- JWT authentication with refresh token rotation
+- Secure, HTTP-only cookie handling
+- Role-based access control
+- Protected routes on all sensitive endpoints
+- Input validation and MongoDB schema validation
 
 ---
 
-## Future Enhancements
+## Roles
 
-Planned Version 2 Features:
+| Role | Permissions |
+|---|---|
+| **User** | Standard authenticated access |
+| **Admin** | Manage products, upload images, monitor analytics, access dashboard & inventory features |
 
-* MPesa Integration
-* Shopping Cart
-* Online Checkout
-* Customer Accounts
-* Employee Accounts
-* Manufacturing Tracking
-* Raw Material Tracking
-* Advanced Reporting
-* Expanded Role System
+---
+
+## Roadmap
+
+Planned for Version 2:
+
+- [ ] M-Pesa integration
+- [ ] Shopping cart & online checkout
+- [ ] Customer accounts
+- [ ] Employee accounts
+- [ ] Manufacturing & raw material tracking
+- [ ] Advanced reporting
+- [ ] Expanded role system
 
 ---
 
 ## Author
 
 **Churchill**
+Full-Stack Developer
 
-Full Stack Developer
-
-GitHub:
-
-https://github.com/Churchillcodes
+[![GitHub](https://img.shields.io/badge/GitHub-Churchillcodes-181717?style=for-the-badge&logo=github)](https://github.com/Churchillcodes)
 
 ---
 
-## License
-
-This project is proprietary software developed for Gleamy Baby Cots & Furniture.
+<sub>This project is proprietary software developed for Gleamy Baby Cots & Furniture.</sub>
