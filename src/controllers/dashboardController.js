@@ -37,6 +37,10 @@ const getDashboardSummary = async (req, res) => {
       Order.countDocuments({ status: "Delivered" }),
 
       Order.countDocuments({ status: "Cancelled" }),
+
+      Lead.countDocuments(),
+
+      Lead.countDocuments({ status: "New" }),
     ]);
 
     res.status(200).json({
@@ -50,6 +54,9 @@ const getDashboardSummary = async (req, res) => {
       confirmedOrders,
       deliveredOrders,
       cancelledOrders,
+
+      totalLeads,
+      newLeads,
     });
   } catch (err) {
     res.status(500).json({
