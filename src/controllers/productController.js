@@ -287,6 +287,15 @@ const uploadProductImages = async (req, res) => {
       });
     }
 
+    // Maximum 5 images per product
+    const MAX_IMAGES = 5;
+
+    if (product.images.length + req.files.length > MAX_IMAGES) {
+      return res.status(400).json({
+        message: `A product can have a maximum of ${MAX_IMAGES} images.`,
+      });
+    }
+
     const uploadedImages = req.files.map((file) => ({
       url: file.path,
       publicId: file.filename,
