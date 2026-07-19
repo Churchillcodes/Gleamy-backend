@@ -21,7 +21,7 @@ const handleNewUser = async (req, res) => {
       return res.status(409).json({ message: "Username already exists" });
     }
 
-    const duplicateEmail = await User.findOne({ email });
+    const duplicateEmail = await User.findOne({ email: email.toLowerCase() });
     if (duplicateEmail) {
       return res.status(409).json({ message: "Email already registered" });
     }
