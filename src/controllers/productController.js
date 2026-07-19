@@ -1,5 +1,6 @@
 const Product = require("../models/Product");
 const cloudinary = require("../config/cloudinary");
+const handleControllerError = require("../utils/handleControllerError");
 
 //create product
 const createProduct = async (req, res) => {
@@ -13,7 +14,7 @@ const createProduct = async (req, res) => {
       .status(201)
       .json({ message: "Product created successfully", newProduct });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return handleControllerError(err, res);
   }
 };
 
@@ -25,7 +26,7 @@ const getAllProducts = async (req, res) => {
     });
     res.status(200).json(products);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return handleControllerError(err, res);
   }
 };
 
@@ -42,10 +43,7 @@ const getProductById = async (req, res) => {
     }
     res.status(200).json(product);
   } catch (err) {
-    if (err.name === "CastError") {
-      return res.status(400).json({ message: "Invalid ID format" });
-    }
-    res.status(500).json({ message: err.message });
+    return handleControllerError(err, res);
   }
 };
 
@@ -76,10 +74,7 @@ const updateProductById = async (req, res) => {
       .status(200)
       .json({ message: "Product updated successfully", updatedProduct });
   } catch (err) {
-    if (err.name === "CastError") {
-      return res.status(400).json({ message: "Invalid ID format" });
-    }
-    res.status(500).json({ message: err.message });
+    return handleControllerError(err, res);
   }
 };
 
@@ -102,7 +97,7 @@ const getLowStockProducts = async (req, res) => {
     });
     res.status(200).json(products);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return handleControllerError(err, res);
   }
 };
 
@@ -138,10 +133,7 @@ const increaseStock = async (req, res) => {
       .status(200)
       .json({ message: "Product restocked successfully", product });
   } catch (err) {
-    if (err.name === "CastError") {
-      return res.status(400).json({ message: "Invalid ID format" });
-    }
-    res.status(500).json({ message: err.message });
+    return handleControllerError(err, res);
   }
 };
 
@@ -178,10 +170,7 @@ const reduceStock = async (req, res) => {
 
     res.status(200).json({ message: "Stock reduced successfully", product });
   } catch (err) {
-    if (err.name === "CastError") {
-      return res.status(400).json({ message: "Invalid ID format" });
-    }
-    res.status(500).json({ message: err.message });
+    return handleControllerError(err, res);
   }
 };
 
@@ -207,15 +196,7 @@ const deleteProductById = async (req, res) => {
       product,
     });
   } catch (err) {
-    if (err.name === "CastError") {
-      return res.status(400).json({
-        message: "Invalid ID format",
-      });
-    }
-
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -230,9 +211,7 @@ const getArchivedProducts = async (req, res) => {
 
     res.status(200).json(products);
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -258,15 +237,7 @@ const restoreProduct = async (req, res) => {
       product,
     });
   } catch (err) {
-    if (err.name === "CastError") {
-      return res.status(400).json({
-        message: "Invalid ID format",
-      });
-    }
-
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -313,9 +284,7 @@ const uploadProductImages = async (req, res) => {
       product,
     });
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -362,15 +331,7 @@ const deleteProductImage = async (req, res) => {
       product,
     });
   } catch (err) {
-    if (err.name === "CastError") {
-      return res.status(400).json({
-        message: "Invalid ID format",
-      });
-    }
-
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 

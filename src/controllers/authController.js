@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const ROLES_LIST = require("../config/roles_list");
+const handleControllerError = require("../utils/handleControllerError");
 
 // register new user
 const handleNewUser = async (req, res) => {
@@ -39,7 +40,7 @@ const handleNewUser = async (req, res) => {
 
     res.status(201).json({ message: `User ${username} created successfully` });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    return handleControllerError(err, res);
   }
 };
 
@@ -111,7 +112,7 @@ const handleNewLogin = async (req, res) => {
     // Send accessToken response
     res.json({ accessToken });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    return handleControllerError(err, res);
   }
 };
 
@@ -157,7 +158,7 @@ const handleRefreshToken = async (req, res) => {
       },
     );
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    return handleControllerError(err, res);
   }
 };
 
@@ -192,7 +193,7 @@ const handleLogout = async (req, res) => {
     });
     res.status(200).json({ message: "Logged out successfully" });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    return handleControllerError(err, res);
   }
 };
 

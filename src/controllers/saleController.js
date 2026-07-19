@@ -1,4 +1,5 @@
 const Sale = require("../models/Sale");
+const handleControllerError = require("../utils/handleControllerError");
 
 // get all sales
 const getAllSales = async (req, res) => {
@@ -7,9 +8,7 @@ const getAllSales = async (req, res) => {
 
     res.status(200).json(sales);
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -26,15 +25,7 @@ const getSaleById = async (req, res) => {
 
     res.status(200).json(sale);
   } catch (err) {
-    if (err.name === "CastError") {
-      return res.status(400).json({
-        message: "Invalid ID format",
-      });
-    }
-
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -76,9 +67,7 @@ const getTopProducts = async (req, res) => {
 
     res.status(200).json(topProducts);
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 //getting revenue trends
@@ -118,9 +107,7 @@ const getRevenueTrends = async (req, res) => {
 
     res.status(200).json(formattedTrends);
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -174,9 +161,7 @@ const getSalesBreakdown = async (req, res) => {
     // frontend's AnalyticsPage.jsx already expects, no frontend change needed.
     res.status(200).json(breakdown);
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 //getting customer history
@@ -215,9 +200,7 @@ const getCustomerHistory = async (req, res) => {
       purchases: sales,
     });
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 

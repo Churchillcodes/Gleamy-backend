@@ -2,6 +2,7 @@ const Order = require("../models/Order");
 const Product = require("../models/Product");
 const Sale = require("../models/Sale");
 const normalizeText = require("../utils/normalizeText");
+const handleControllerError = require("../utils/handleControllerError");
 //creating an order
 const createOrder = async (req, res) => {
   try {
@@ -64,15 +65,7 @@ const createOrder = async (req, res) => {
       order,
     });
   } catch (err) {
-    if (err.name === "CastError") {
-      return res.status(400).json({
-        message: "Invalid product ID",
-      });
-    }
-
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -97,9 +90,7 @@ const getAllOrders = async (req, res) => {
 
     res.status(200).json(orders);
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -121,15 +112,7 @@ const getOrderById = async (req, res) => {
 
     res.status(200).json(order);
   } catch (err) {
-    if (err.name === "CastError") {
-      return res.status(400).json({
-        message: "Invalid ID format",
-      });
-    }
-
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -292,15 +275,7 @@ const updateOrderStatus = async (req, res) => {
       order,
     });
   } catch (err) {
-    if (err.name === "CastError") {
-      return res.status(400).json({
-        message: "Invalid ID format",
-      });
-    }
-
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -314,9 +289,7 @@ const cancelOrder = async (req, res) => {
 
     return updateOrderStatus(req, res);
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 module.exports = {

@@ -1,4 +1,5 @@
 const Lead = require("../models/Lead");
+const handleControllerError = require("../utils/handleControllerError");
 
 // Create Lead
 const createLead = async (req, res) => {
@@ -19,9 +20,7 @@ const createLead = async (req, res) => {
       lead,
     });
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -34,9 +33,7 @@ const getAllLeads = async (req, res) => {
 
     res.status(200).json(leads);
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 

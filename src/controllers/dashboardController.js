@@ -1,6 +1,7 @@
 const Product = require("../models/Product");
 const Order = require("../models/Order");
 const Lead = require("../models/Lead");
+const handleControllerError = require("../utils/handleControllerError");
 
 //Dashboard summary
 const getDashboardSummary = async (req, res) => {
@@ -59,9 +60,7 @@ const getDashboardSummary = async (req, res) => {
       newLeads,
     });
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -98,9 +97,7 @@ const getRevenueAnalytics = async (req, res) => {
       todayRevenue,
     });
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 
@@ -133,9 +130,7 @@ const getLeadAnalytics = async (req, res) => {
       leadSources,
     });
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return handleControllerError(err, res);
   }
 };
 module.exports = {
