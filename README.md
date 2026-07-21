@@ -81,42 +81,62 @@ The screens below are rendered by the companion [frontend](https://github.com/Ch
 ## Features
 
 ### 🔐 Authentication & Authorization
-- User registration and login
-- JWT access tokens with refresh token rotation
-- Secure, HTTP-only cookie handling
+
+- JWT-based authentication with access and refresh tokens
+- Secure HTTP-only refresh token cookies
 - Password hashing with bcrypt
-- Role-based authorization on protected admin routes
+- Role-based access control (RBAC)
+- Admin-only registration workflow
+- Account activation/deactivation support
+- Silent session restoration using refresh tokens
+- Protected administrative routes
 
 ### 📦 Product Management
+
 - Full CRUD on products
 - Archive and restore products (soft-delete safe)
 - Search and category filtering
 - Low-stock monitoring
 
 ### 📊 Inventory Management
+
 - Real-time stock tracking and adjustments
 - Stock validation to prevent overselling
 - Low-stock alerts
 - Inventory-safe atomic operations
 
 ### 🖼️ Image Management
+
 - Cloudinary integration for product photos
 - Upload and delete product images
 - Stores Cloudinary URLs and public IDs
 - Guards against deleting a product's final image
 
 ### 📥 Lead Tracking & Analytics
+
 - Records each customer's name, phone number, and referral source at the point of inquiry
 - Aggregates leads by source (Instagram, Facebook, Google Search, etc.)
 - Powers the dashboard's Lead Analytics widget for marketing insight
 
 ### 💰 Sales Management & Analytics
+
 - Revenue tracking and sales record-keeping
 - Product-level sales history
 - Aggregated analytics for dashboard reporting
 - Business performance indicators
 
+### 🛡️ Production Security
+
+- Helmet security headers
+- Express Rate Limiting on authentication endpoints
+- Environment-based CORS allowlists
+- Secure cookie configuration for HTTPS deployments
+- Graceful shutdown handling for Railway deployments
+- Unhandled rejection and uncaught exception monitoring
+- MongoDB schema validation
+
 ### 🛠️ Development Utilities
+
 - Database seeding with realistic sample data
 - API documentation
 - Developer-friendly scripts
@@ -125,14 +145,17 @@ The screens below are rendered by the companion [frontend](https://github.com/Ch
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js |
-| Framework | Express.js |
-| Database | MongoDB Atlas, Mongoose |
-| Auth | JWT, bcrypt |
-| Media Storage | Cloudinary, Multer, Multer Storage Cloudinary |
-| Tooling | Nodemon, Git, GitHub, Postman |
+| Layer          | Technology                        |
+| -------------- | --------------------------------- |
+| Runtime        | Node.js                           |
+| Framework      | Express.js                        |
+| Database       | MongoDB Atlas, Mongoose           |
+| Authentication | JWT, bcrypt                       |
+| Security       | Helmet, Express Rate Limit        |
+| Media Storage  | Cloudinary                        |
+| File Uploads   | Multer, Multer Storage Cloudinary |
+| Deployment     | Railway                           |
+| Tooling        | Nodemon, Git, GitHub              |
 
 ---
 
@@ -141,9 +164,18 @@ The screens below are rendered by the companion [frontend](https://github.com/Ch
 ```text
 src/
 │
-├── config/       # Environment & service configuration
+├── config/
+│   ├── corsOptions.js
+│   ├── dbConn.js
+│   └── roles_list.js
+│
 ├── controllers/  # Route handler logic
-├── middleware/   # Auth, validation, error handling
+├── middleware/
+│   ├── authLimiter.js
+│   ├── verifyJWT.js
+│   ├── verifyRoles.js
+│   └── logger.js
+│
 ├── models/       # Mongoose schemas
 ├── routes/       # Express route definitions
 ├── utils/        # Helper utilities
@@ -197,9 +229,15 @@ npm start
 Create a `.env` file in the project root:
 
 ```env
-DATABASE_URI=
+NODE_ENV=development
+
+MONGO_URI=
+
 ACCESS_TOKEN_SECRET=
 REFRESH_TOKEN_SECRET=
+
+ALLOWED_ORIGINS=http://localhost:5173
+
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
@@ -245,20 +283,27 @@ flowchart TD
 
 ## Security
 
+The API is designed for public internet deployment and includes:
+
 - Password hashing with bcrypt
-- JWT authentication with refresh token rotation
-- Secure, HTTP-only cookie handling
+- JWT access tokens
+- Refresh token authentication flow
+- Secure HTTP-only cookies
+- Helmet security headers
+- Express Rate Limiting
 - Role-based access control
-- Protected routes on all sensitive endpoints
-- Input validation and MongoDB schema validation
+- Environment-specific CORS policies
+- MongoDB schema validation
+- Protected admin routes
+- Graceful shutdown handling for Railway deployments
 
 ---
 
 ## Roles
 
-| Role | Permissions |
-|---|---|
-| **User** | Standard authenticated access |
+| Role      | Permissions                                                                              |
+| --------- | ---------------------------------------------------------------------------------------- |
+| **User**  | Standard authenticated access                                                            |
 | **Admin** | Manage products, upload images, monitor analytics, access dashboard & inventory features |
 
 ---
@@ -274,6 +319,7 @@ Planned for Version 2:
 - [ ] Manufacturing & raw material tracking
 - [ ] Advanced reporting
 - [ ] Expanded role system
+- [ ] Refresh token reuse detection & session invalidation
 
 ---
 
