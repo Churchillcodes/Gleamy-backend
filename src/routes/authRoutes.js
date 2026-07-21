@@ -7,9 +7,10 @@ const {
   handleRefreshToken,
   handleLogout,
 } = require("../controllers/authController");
+const { authLimiter } = require("../middleware/rateLimiter");
 
-router.post("/register", handleNewUser);
-router.post("/login", handleNewLogin);
+router.post("/register", authLimiter, handleNewUser);
+router.post("/login", authLimiter, handleNewLogin);
 router.get("/refresh", handleRefreshToken);
 router.post("/logout", handleLogout);
 

@@ -1,28 +1,20 @@
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
 const app = express();
 const logger = require("./middleware/logger");
 const cookieParser = require("cookie-parser");
+const corsOptions = require("./config/corsOptions");
 
-const allowedOrigins = ["http://localhost:5173"];
+// Railway (and most PaaS providers) sit behind a reverse proxy.
+// This makes req.secure and req.ip work correctly, which matters
+// for secure cookies and rate limiting.
+app.set("trust proxy", 1);
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like Postman or mobile apps)
-      if (!origin) return callback(null, true);
+app.use(cors(corsOptions));
 
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // Crucial for cookies/sessions/auth headers
-    optionsSuccessStatus: 200,
-  }),
-);
 // 1. Global Middleware
+app.use(helmet());
 app.use(logger);
 app.use(express.json());
 app.use(cookieParser());
@@ -35,5 +27,16 @@ app.use("/dashboard", require("./routes/dashboardRoutes"));
 app.use("/sales", require("./routes/saleRoutes"));
 app.use("/leads", require("./routes/leadRoutes"));
 app.use("/auth", require("./routes/authRoutes"));
-// 3. Exporting the app instance
+
+// 3. Global error handler (catches CORS rejection and anything else
+// that reaches next(err) instead of being handled inside a controller)
+app.use((err, req, res, next) => {
+  if (err.message === "Not allowed by CORS") {
+    return res.status(403).json({ message: "Not allowed by CORS" });
+  }
+  console.error(err);
+  res.status(500).json({ message: "Internal server error" });
+});
+
+// 4. Exporting the app instance
 module.exports = app;
